@@ -4,6 +4,7 @@ const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID
 let accessToken: string;  // This will be used to store the access token
 const redirectUri = 'http://localhost:5173'  // This is the redirect URI that we will use to redirect the user back to our app
 let userId: string;  // This will be used to store the user ID
+const scopes = 'playlist-modify-public playlist-modify-private'  // This is the scope that we will use to get the user's playlist data
 
 const Spotify = {
   async getAuth () {
@@ -19,7 +20,7 @@ const Spotify = {
       window.history.pushState('Access Token', null, '/');
       return accessToken;
     } else {
-      const accessUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectUri}`;
+      const accessUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=${scopes}&redirect_uri=${redirectUri}`;
       window.location.href = accessUrl;
     }
   },
@@ -75,11 +76,15 @@ const Spotify = {
     })
   },
 
-  async createPlaylist(listName: string, urisArray: string[]) {
+  async createPlaylist(listName: string, urisArray: string[], isPublic: boolean) {
     const createListUrl = `https://api.spotify.com/v1/users/${userId}/playlists`
+    console.log('Creating Playlist:', isPublic)
     const playlistData = {
       'name': listName,
+      'public': isPublic
     }
+    console.log(playlistData)
+
     return fetch (createListUrl, {
       method: 'POST',
       headers: {

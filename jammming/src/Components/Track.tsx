@@ -10,6 +10,7 @@ interface TrackProps {
 }
 
 const Track = ({ track, trackBtnAction, onClick, inPlaylist }: TrackProps) => {
+
   const handleAction = () => {
     onClick(track)
   }
@@ -30,11 +31,11 @@ const Track = ({ track, trackBtnAction, onClick, inPlaylist }: TrackProps) => {
           {track.album.name}
         </p>
       </div>
-      <div className="trackControls">
+      <div className="trackControls flex items-center gap-4">
         <audio src={track.preview_url} controls />
         <p>{track.explicit && <BsExplicitFill />}</p>
       </div>
-      <div className="trackButton">
+      <div className="trackButton flex justify-center">
         <button
           onClick={handleAction}
           aria-label={`${trackBtnAction} Playlist`}

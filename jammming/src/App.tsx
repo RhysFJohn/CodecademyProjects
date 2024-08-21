@@ -18,6 +18,10 @@ function App() {
     setSearchResults(results)
   }
 
+  const urisArray = playlistTracks.map((t) => t.uri)
+
+  console.log('UriArray:', urisArray)
+
   useEffect(() => {
     const authenticated = Spotify.checkAuth();
     if (authenticated) {
@@ -49,34 +53,34 @@ function App() {
     }
   
     // Check if the URI is already in the playlist
-    if (playlistTracks.includes(track.uri)) return;
+    if (playlistTracks.includes(track)) return;
   
     // Add only the URI to the playlistTracks state
     setPlaylistTracks((prev) => [...prev, track]);
   };
 
   const removeTrack = (track: ITrack) => {
-    setPlaylistTracks((prevTracks) => prevTracks.filter((t) => t !== track.uri))
+    setPlaylistTracks((prevTracks) => prevTracks.filter((t) => t.uri !== track.uri))
   }
 
   const changeListName = (name: string) => {
     setPlaylistName(name)
   }
 
-  const savePlaylist = async () => {
+  const savePlaylist = async (isPublic: boolean) => {
     if (playlistTracks.length === 0) {
       return;
     }
 
-    const urisArray = playlistTracks.map((track) => track.uri)
-    await Spotify.createPlaylist(playlistName, urisArray).then((res) => {
+    await Spotify.createPlaylist(playlistName, urisArray, isPublic).then((res) =>{
       if (res) {
-        alert('Playlist saved successfully: ' + playlistName)
+        alert('Playlist created successfully: ' + playlistName)
         setPlaylistName('')
         setPlaylistTracks([])
       }
     })
   }
+
 
   return (
     <>
